@@ -1,0 +1,36 @@
+# TensorFlow VS Pytorch
+
+[build-system]
+requires = ["setuptools>=70.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+# Project settings -----------------------------------------------------------------------------------------------------
+[project]
+name = "tfvspt"
+dynamic = ["version"]
+description = "Comparing TensorFlow and Pytorch"
+readme = "README.md"
+requires-python = ">=3.10"
+
+# Required dependencies ------------------------------------------------------------------------------------------------
+dependencies = [
+    
+]
+
+# Optional dependencies ------------------------------------------------------------------------------------------------
+[project.optional-dependencies]
+dev = [
+    "isort",
+    "pre-commit",
+    "yapf",
+]
+
+[project.urls]
+"Source" = "https://github.com/infocusp/tf_pt_benchmarking"
+
+# Tools settings -------------------------------------------------------------------------------------------------------
+[tool.setuptools]  # configuration specific to the `setuptools` build backend.
+packages = { find = { where = ["."], include = ["tfvspt", "tfvspt.*"] } }
+
+[tool.setuptools.dynamic]
+version = { attr = "tfvspt.__version__" }
