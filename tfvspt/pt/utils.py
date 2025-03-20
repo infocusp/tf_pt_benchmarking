@@ -51,20 +51,24 @@ def plot_history(history: dict[str, list]) -> None:
 
     epochs = range(len(history['loss']))
 
-    # Plot loss
+    # Plot accuracy
     plt.figure(figsize=(12, 12))
     plt.subplot(2, 1, 1)
-    plt.plot(epochs, history['loss'], label='Loss')
-    plt.xlabel('Epoch')
-    plt.ylabel('Loss')
-    plt.title('Training Loss')
-
-    # Plot accuracy
-    plt.subplot(2, 1, 2)
-    plt.plot(epochs, history['accuracy'], label='Accuracy')
+    plt.plot(epochs,
+             history['accuracy'],
+             '-o',
+             label='Accuracy',
+             color='#1f77b4')
     plt.xlabel('Epoch')
     plt.ylabel('Accuracy')
     plt.title('Training Accuracy')
+
+    # Plot loss
+    plt.subplot(2, 1, 2)
+    plt.plot(epochs, history['loss'], '-o', label='Loss', color='#ff7f0e')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.title('Training Loss')
 
     plt.tight_layout()
     plt.show()
