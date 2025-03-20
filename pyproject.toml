@@ -14,15 +14,23 @@ requires-python = ">=3.10"
 
 # Required dependencies ------------------------------------------------------------------------------------------------
 dependencies = [
-    
+    "tqdm >= 4.67.1",
+    "torch >= 2.6.0",
+    "PyYAML >= 6.0.2",
+    "notebook >= 7.3.3",
+    "pydantic >= 2.10.6",
+    "torchinfo >= 1.8.0",
+    "tensorflow >= 2.19.0",
+    "matplotlib >= 3.10.1",
+    "torchvision >= 0.21.0",
 ]
 
 # Optional dependencies ------------------------------------------------------------------------------------------------
 [project.optional-dependencies]
 dev = [
+    "yapf",
     "isort",
     "pre-commit",
-    "yapf",
 ]
 
 [project.urls]
