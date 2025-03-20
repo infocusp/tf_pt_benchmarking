@@ -9,7 +9,7 @@ class Model(nn.Module):
         super().__init__(*args, **kwargs)
 
         layers = []
-        channels = [3, 32, 64, 128]
+        channels = [3, 32, 64, 128, 128]
         for i in range(1, len(channels)):
             layers += [
                 nn.Conv2d(channels[i - 1],
@@ -26,7 +26,7 @@ class Model(nn.Module):
         self.gap = nn.AdaptiveAvgPool2d((1, 1))
 
         self.fc = nn.Sequential(
-            nn.Linear(128, 128),
+            nn.Linear(channels[-1], 128),
             nn.ReLU(),
             nn.Linear(128, n_classes),
         )

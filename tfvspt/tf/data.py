@@ -1,44 +1,47 @@
 """Tensorflow Data Loader."""
 
-import numpy as np
+import os
+
 import tensorflow as tf
 from tensorflow.data import AUTOTUNE
 
 from tfvspt.config.config import Config
 
 
-class Dataset:
+class ClassificationDataset:
 
     def __init__(self, config: Config) -> None:
         self.config = config
 
-    @staticmethod
-    def get_data():
-        return tf.keras.datasets.cifar100.load_data()
-
-    def preprocess_data(self, image, label):
-        image = tf.cast(image, tf.float32)
+    def preprocess_data(self, path: str):
+        # read the image from disk, decode it, convert the data type to
+        # floating point, and resize it
+        image = tf.io.read_file(path)
+        image = tf.image.decode_jpeg(image, channels=3)
+        image = tf.image.resize(image, self.config.imgsz[:2])
         image = tf.cast(image / 255.0, tf.float32)
-        label = tf.squeeze(tf.one_hot(label, self.config.n_classes), axis=0)
+        # parse the class label from the file path
+        label = tf.strings.split(path, os.path.sep)[-2]
+        label = tf.strings.to_number(label, tf.int32)
+        label = tf.one_hot(label, self.config.n_classes)
         return image, label
 
-    def load_dataset(
+    def get_dataloader(
         self,
-        images: np.ndarray,
-        labels: np.ndarray,
+        paths: list,
         shuffle: bool = False,
         repeat: bool = False,
     ):
-        # Create tf dataset
-        dataset = tf.data.Dataset.from_tensor_slices((images, labels))
-        dataset = (dataset.map(self.preprocess_data,
-                               num_parallel_calls=AUTOTUNE).cache())
+        # Create tf dataloader
+        dataloader = tf.data.Dataset.from_tensor_slices(paths)
+        dataloader = (dataloader.map(self.preprocess_data,
+                                     num_parallel_calls=AUTOTUNE).cache())
         # Shuffle
         if shuffle:
-            dataset = dataset.shuffle(images.shape[0])
+            dataloader = dataloader.shuffle(len(paths))
         # Batch
-        dataset = (dataset.batch(self.config.bs).prefetch(AUTOTUNE))
+        dataloader = (dataloader.batch(self.config.bs).prefetch(AUTOTUNE))
         # Repeat
         if repeat:
-            dataset = dataset.repeat()
-        return dataset
+            dataloader = dataloader.repeat()
+        return dataloader

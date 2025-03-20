@@ -1,8 +1,20 @@
+"""Config."""
+
+from enum import Enum
+from pathlib import Path
+
 from pydantic import BaseModel
-import yaml
+
+from tfvspt.utils import read_yaml
+
+
+class Framework(str, Enum):
+    tensorflow = "tf"
+    pytorch = "pt"
 
 
 class Config(BaseModel):
+    framework: Framework
     seed: int
     n_classes: int
     bs: int
@@ -10,9 +22,20 @@ class Config(BaseModel):
     lr: float
     epochs: int
     num_workers: int
-    output: str
+    output: Path
+    data: Path
+
+    def model_post_init(self, __context):
+        self.output.mkdir(parents=True, exist_ok=True)
+
+    def model_dump(self, *args, **kwargs):
+        data = super().model_dump(*args, **kwargs)
+        data["framework"] = data["framework"].value
+        # Convert PosixPath to string in the dictionary
+        for path in ["output", "data"]:
+            data[path] = str(data[path])
+        return data
 
 
 def get_config(path: str) -> Config:
-    config = yaml.safe_load(open(path))
-    return Config(**config)
+    return Config(**read_yaml(path))
