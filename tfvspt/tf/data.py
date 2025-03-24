@@ -26,9 +26,15 @@ class ClassificationDataset:
         label = tf.one_hot(label, self.config.n_classes)
         return image, label
 
+    def augment_data(self, image, label):
+        image = tf.image.random_flip_left_right(image)
+        image = tf.image.random_flip_up_down(image)
+        return image, label
+
     def get_dataloader(
         self,
         paths: list,
+        augment: bool = False,
         shuffle: bool = False,
         repeat: bool = False,
     ):
@@ -36,6 +42,10 @@ class ClassificationDataset:
         dataloader = tf.data.Dataset.from_tensor_slices(paths)
         dataloader = (dataloader.map(self.preprocess_data,
                                      num_parallel_calls=AUTOTUNE).cache())
+        # Augment
+        if augment:
+            dataloader = dataloader.map(self.augment_data,
+                                        num_parallel_calls=AUTOTUNE)
         # Shuffle
         if shuffle:
             dataloader = dataloader.shuffle(len(paths))

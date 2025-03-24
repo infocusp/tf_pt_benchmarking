@@ -39,7 +39,10 @@ class PytorchBenchmarking(BenchmarkingBase):
     def get_transforms(self, data: str):
         transforms_ = []
         if data == "train":
-            transforms_ += []
+            transforms_ += [
+                transforms.RandomHorizontalFlip(),
+                transforms.RandomVerticalFlip(),
+            ]
         transforms_ += [
             transforms.Resize(self.config.imgsz[:2]),
             transforms.ToTensor(),

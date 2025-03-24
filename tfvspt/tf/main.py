@@ -29,10 +29,12 @@ class TensorflowBenchmarking(BenchmarkingBase):
         dataloaders = {
             "train":
                 dataset.get_dataloader(self.raw_data["train"],
+                                       augment=True,
                                        shuffle=True,
                                        repeat=True),
             "test":
                 dataset.get_dataloader(self.raw_data["test"],
+                                       augment=False,
                                        shuffle=False,
                                        repeat=False),
         }
