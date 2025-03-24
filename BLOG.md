@@ -132,20 +132,39 @@ class ClassificationDataset(Dataset):
         config: Config,
         paths: list[str],
         transforms=None,
+        augmentations=None,
+        cache: bool = False,
     ) -> None:
         self.config = config
         self.paths = paths
         self.transforms = transforms
+        self.augmentations = augmentations
+        self.cache = None
+        if cache:
+            self.cache = SharedCache(
+                size_limit_gib=get_shm_size(),
+                dataset_len=len(self.paths),
+                data_dims=(self.config.imgsz[-1], *self.config.imgsz[:-1]),
+                dtype=torch.float32,
+            )
 
     def __len__(self) -> None:
         return len(self.paths)
 
     def __getitem__(self, idx: int):
         path = self.paths[idx]
-        image = Image.open(path).convert('RGB')
         label = int(path.split(os.path.sep)[-2])
-        if self.transforms:
-            image = self.transforms(image)
+        image = None
+        if self.cache:
+            image = self.cache.get_slot(idx)
+        if image is None:
+            image = Image.open(path).convert('RGB')
+            if self.transforms:
+                image = self.transforms(image)
+            if self.cache:
+                self.cache.set_slot(idx, image)
+        if self.augmentations:
+            image = self.augmentations(image)
         return image, label
 ```
 
@@ -279,9 +298,12 @@ With Augmentations:
 |------------|------------|------------|---------|---------------|-----------|
 | PyTorch    | 16 | 0          | False | 1741s        | 8s       |
 | PyTorch    | 32 | 0          | False | 1589s        | 8s       |
+| PyTorch    | 32 | 0          | True | 1217s        | 8s       |
 | PyTorch    | 64 | 0          | False | 1443s        | 8s       |
 | PyTorch    | 32 | 5          | False | 1420s        | 6s       |
+| PyTorch    | 32 | 5          | True | 1301s        | 6s       |
 | PyTorch    | 32 | 10          | False | 1407s        | 6s       |
+| PyTorch    | 32 | 10          | True | 1305s        | 7s       |
 | PyTorch    | 32 | 15          | False | 1361s        | 5s       |
 | PyTorch    | 32 | 20          | False | 1404s        | 7s       |
 | TensorFlow | 16 | NA          | True | 1419s        | 4s       |
