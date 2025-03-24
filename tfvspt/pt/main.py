@@ -36,24 +36,25 @@ class PytorchBenchmarking(BenchmarkingBase):
         torch.backends.cudnn.benchmark = False
         self.logger.info(f"{self.config.framework}, seed, {self.config.seed}")
 
-    def get_transforms(self, data: str):
-        transforms_ = []
-        if data == "train":
-            transforms_ += [
-                transforms.RandomHorizontalFlip(),
-                transforms.RandomVerticalFlip(),
-            ]
-        transforms_ += [
+    def get_transforms(self):
+        return transforms.Compose([
             transforms.Resize(self.config.imgsz[:2]),
             transforms.ToTensor(),
-        ]
-        return transforms.Compose(transforms_)
+        ])
+
+    def get_augmentations(self):
+        return transforms.Compose([
+            transforms.RandomHorizontalFlip(),
+            transforms.RandomVerticalFlip(),
+        ])
 
     def _get_dataset(self, data: str) -> ClassificationDataset:
         return ClassificationDataset(
             config=self.config,
             paths=self.raw_data[data],
-            transforms=self.get_transforms(data),
+            transforms=self.get_transforms(),
+            augmentations=self.get_augmentations() if data == "train" else None,
+            cache=data == "train",
         )
 
     def load_dataloaders(self) -> dict:
