@@ -177,5 +177,13 @@ cython_debug/
 **/*.keras
 **/*.pt
 **/*.csv
+**/*.jpg
+
+benchmarking/
+
+# Models
+**/*.keras
+**/*.pt
+**/*.csv
 
 benchmarking/
