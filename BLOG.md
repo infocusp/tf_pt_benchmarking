@@ -280,9 +280,11 @@ Time taken for:
 
 After running with different combinations of training parameters (batch-size, num_workers etc) & devices, here are the results 🥁
 
-### CPU
+### SEED: 25 | Epochs: 20
 
-#### SEED: 25 | Epochs: 20
+#### CPU
+
+Name: Intel(R) Core(TM) Ultra 7 155H
 
 Without Augmentations: 
 | Framework  | Batch Size | Num Workers | Caching | Training Time | Eval Time |
@@ -309,5 +311,28 @@ With Augmentations:
 | TensorFlow | 16 | NA          | True | 1419s        | 4s       |
 | TensorFlow | 32 | NA          | True | 1151s        | 3s       |
 | TensorFlow 💯 | 64 | NA          | True | 1021s        | 2s       |
+
+
+#### GPU
+
+Name: Tesla T4
+
+With Augmentations:
+| Framework  | Batch Size | Num Workers | Caching | Training Time | Eval Time |
+|------------|------------|------------|---------|---------------|-----------|
+| PyTorch    | 16 | 0          | True | 320s        | 8s       |
+| PyTorch    | 32 | 0          | False | 580s        | 4s       |
+| PyTorch    | 32 | 0          | True | 201s        | 4s       |
+| PyTorch    | 32 | 5          | False | 187s        | 2s       |
+| PyTorch    | 32 | 5          | True | 161s        | 2s       |
+| PyTorch    | 32 | 10          | False | 192s        | 2s       |
+| PyTorch    | 32 | 10          | True | 163s        | 2s       |
+| PyTorch    | 32 | 15          | True | 165s        | 2s       |
+| PyTorch    | 32 | 20          | True | 168s        | 2s       |
+| PyTorch    | 64 | 0          | True | 155s        | 4s       |
+| TensorFlow | 16 | NA          | True | 199s        | 3s       |
+| TensorFlow | 32 | NA          | False | 143s        | 3s       |
+| TensorFlow | 32 | NA          | True | 126s        | 3s       |
+| TensorFlow 💯 | 64 | NA          | True | 94s        | 2s       |
 
 ### Find the code here - [🚀](https://github.com/infocusp/tf_pt_benchmarking)
