@@ -49,7 +49,7 @@ class TensorflowBenchmarking(BenchmarkingBase):
     def get_callbacks(self) -> list:
         # train history logger
         csv_logger = tf.keras.callbacks.CSVLogger(str(self.config.output /
-                                                      'cifar100_training.csv'),
+                                                      'history.csv'),
                                                   separator=",",
                                                   append=False)
         return [csv_logger]
@@ -97,7 +97,7 @@ class TensorflowBenchmarking(BenchmarkingBase):
 
         # save model
         st = time.time()
-        model.save(str(self.config.output / "cifar100.keras"))
+        model.save(str(self.config.output / "last.keras"))
         self._log_stats("model_saving_time", time.time() - st)
 
     def eval(self) -> dict:
@@ -107,7 +107,7 @@ class TensorflowBenchmarking(BenchmarkingBase):
         # load model
         st = time.time()
         model = tf.keras.models.load_model(
-            str(self.config.output / "cifar100.keras"))
+            str(self.config.output / "last.keras"))
         self._log_stats("model_loading_time", time.time() - st)
 
         # evaluate

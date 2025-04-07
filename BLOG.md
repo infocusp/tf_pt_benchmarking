@@ -335,4 +335,36 @@ With Augmentations:
 | TensorFlow | 32 | NA          | True | 126s        | 3s       |
 | TensorFlow 💯 | 64 | NA          | True | 94s        | 2s       |
 
+
+---
+
+
+We also conducted experiments using a dataset large enough that it could not be cached in memory:
+
+Dataset: [DeepFashion](https://mmlab.ie.cuhk.edu.hk/projects/DeepFashion/AttributePrediction.html)  
+(_Dataset was formatted to follow a proper folder structure_)
+
+Data Size:  
+- Training: 249222  
+- Testing: 40000
+
+Image Size: 128 x 128
+
+With Augmentations:
+| Framework  | Batch Size | Num Workers | Caching | Training Time | Eval Time |
+|------------|------------|------------|---------|---------------|-----------|
+| Pytorch    | 32 | 5          | False | 4068s        | 19s       |
+| Tensorflow 💯    | 32 | NA          | False | 3663s        | 10s       |
+
+
+## References
+
+- https://pyimagesearch.com/2021/06/21/data-pipelines-with-tf-data-and-tensorflow/
+- https://www.tensorflow.org/guide/data_performance
+- https://opencv.org/blog/pytorch-vs-tensorflow/
+- https://charl-ai.github.io/blog/dataloaders/
+- https://github.com/szymonmaszke/torchdatasets
+- https://pytorch.org/tutorials/recipes/recipes/tuning_guide.html
+
+
 ### Find the code here - [🚀](https://github.com/infocusp/tf_pt_benchmarking)

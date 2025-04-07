@@ -193,7 +193,7 @@ class PytorchBenchmarking(BenchmarkingBase):
 
         # save model
         st = time.time()
-        torch.jit.script(model).save(str(self.config.output / "cifar100.pt"))
+        torch.jit.script(model).save(str(self.config.output / "last.pt"))
         self._log_stats("model_saving_time", time.time() - st)
 
     def eval(self) -> dict:
@@ -202,7 +202,7 @@ class PytorchBenchmarking(BenchmarkingBase):
 
         # load model
         st = time.time()
-        model = torch.jit.load(str(self.config.output / "cifar100.pt"))
+        model = torch.jit.load(str(self.config.output / "last.pt"))
         self._log_stats("model_loading_time", time.time() - st)
 
         # evaluate
