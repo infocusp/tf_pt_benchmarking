@@ -180,3 +180,10 @@ cython_debug/
 **/*.jpg
 
 benchmarking/
+
+# Models
+**/*.keras
+**/*.pt
+**/*.csv
+
+benchmarking/

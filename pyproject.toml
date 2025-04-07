@@ -21,7 +21,7 @@ dependencies = [
     "pydantic >= 2.10.6",
     "torchinfo >= 1.8.0",
     "stocaching >= 0.2.0",
-    "tensorflow >= 2.19.0",
+    "tensorflow[and-cuda] >= 2.19.0",
     "matplotlib >= 3.10.1",
     "torchvision >= 0.21.0",
 ]
